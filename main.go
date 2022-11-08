@@ -7,20 +7,33 @@ import (
 )
 
 type todo struct {
-	id string
-	title string
-	description string
-	isShare bool
+	ID string `json:"id"`
+	Title string `json:"title"`
+	Description string `json:"Description"`
+	IsShare bool `json:"IsShare"`
+	Price  float64 `json:"price"`
+}
+var todoArray = []todo {
+	{ ID: "1", Title: "first", Description: "this could be first", IsShare: true, Price: 15.2 },
+	{ ID: "2", Title: "second", Description: "this could be second", IsShare: false, Price: 56.55 },
 }
 
 
-
 func getTodos(c *gin.Context) {
-	var todoArray = []todo {
-		{ id: "1", title: "first", description: "this could be first", isShare: true },
-		{ id: "2", title: "second", description: "this could be second", isShare: false },
-	}
+
 	c.IndentedJSON(http.StatusOK, todoArray)
+}
+
+func getTodoById(c *gin.Context) {
+	id := c.Param("id")
+
+	for _, a := range todoArray {
+		if a.ID == id {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 }
 
 
@@ -50,6 +63,8 @@ func main() {
 	})
 
 	router.GET("/", getTodos)
+	router.GET("/todo/:id", getTodoById)
 
 	router.Run() // listen and serve on 0.0.0.0:8080
 }
+

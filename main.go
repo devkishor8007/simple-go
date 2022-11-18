@@ -39,10 +39,8 @@ func getTodoById(c *gin.Context) {
 
 
 func main() {
-
-
 	router := gin.Default()
-	router.SetTrustedProxies([]string{"192.168.0.117"})
+	router.SetTrustedProxies([]string{"192.168.0.80"})
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -65,6 +63,41 @@ func main() {
 	router.GET("/", getTodos)
 	router.GET("/todo/:id", getTodoById)
 
-	router.Run() // listen and serve on 0.0.0.0:8080
+	router.GET("test/:name", func(c *gin.Context) {
+		name := c.Param("name");
+		c.String(http.StatusOK, "Hello %s", name);
+	})
+
+	router.GET("test/:name/*action", func(c *gin.Context) {
+		name := c.Param("name")
+		action := c.Param("action")
+		message := name + action
+		c.String(http.StatusOK, message)
+	})
+
+	router.GET("doubleParam/:name/:address", func(c *gin.Context) {
+		name := c.Param("name")
+		address := c.Param("address")
+
+		c.String(http.StatusOK, "hello %s %s", name, address);
+	})
+
+	router.GET("welcome", func(c *gin.Context) {
+		name := c.Query("name");
+		c.String(http.StatusOK, "Hello %s", name);
+	})
+
+	router.GET("useDefaultQuery", func(c *gin.Context) {
+		name := c.DefaultQuery("name", "naames")
+		c.String(http.StatusOK, "why man %s this", name)
+	})
+
+	router.GET("testy", func(c *gin.Context) {
+		hello := c.DefaultQuery("hello", "hi")
+		me := c.Query("me")
+		c.String(http.StatusOK, "%s its %s", hello, me)
+	})
+
+	router.Run(":3605") // listen and serve on 0.0.0.0:8080
 }
 

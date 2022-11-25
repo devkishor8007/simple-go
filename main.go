@@ -98,6 +98,11 @@ func main() {
 		c.String(http.StatusOK, "%s its %s", hello, me)
 	})
 
+	router.GET("newParam/:id", func(c *gin.Context) {
+		id := c.Param("id");
+		c.String(http.StatusOK, "%s", id)
+	})
+
 	router.Run(":3605") // listen and serve on 0.0.0.0:8080
 }
 

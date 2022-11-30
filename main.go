@@ -103,6 +103,13 @@ func main() {
 		c.String(http.StatusOK, "%s", id)
 	})
 
+	router.POST("/post", func(c *gin.Context){
+		id := c.Query("id")
+		name := c.PostForm("name")
+		// name := c.Request.Body("name")
+		c.String(201, "id: %s; name: %s", id, name)
+	})
+
 	router.Run(":3605") // listen and serve on 0.0.0.0:8080
 }
 
